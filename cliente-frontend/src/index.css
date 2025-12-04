@@ -1,0 +1,115 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.navbar {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #fbd46d; /* Fondo amarillo birria */
+  padding-top: 6%;
+  text-align: center; 
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+main {
+  margin-top: 70px; /* ajusta según la altura de tu navbar */
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Título de la tabla */
+.titulo-clientes {
+  font-weight: bold;
+  color: #75421e; /* Café oscuro */
+  margin-bottom: 20px;
+}
+
+/* Estilo de cabecera */
+.tabla-clientes thead th {
+  background-color: #f5a540; 
+  color: #75421e;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Alternar colores en filas */
+.tabla-clientes tbody tr:nth-child(odd) {
+  background-color: #f8bc56; /* Amarillo claro */
+}
+
+.tabla-clientes tbody tr:nth-child(even) {
+  background-color: #f5a540; /* Amarillo oscuro */
+}
+
+/* Bordes más definidos */
+.tabla-clientes {
+  border: 1px solid #f28926;
+}
+
+.tabla-clientes td, 
+.tabla-clientes th {
+  border: 1px solid #f28926;
+}
