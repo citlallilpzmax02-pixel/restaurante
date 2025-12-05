@@ -92,11 +92,17 @@ export const DetalleVentaComponent = ({ show, handleClose, ventaId }) => {
     }
   };
 
-  // ✅ Nueva versión: usar el PDF generado desde el backend
+  // Función para imprimir el contenido del modal
   const imprimirTicket = () => {
-    if (!ventaId) return;
-    generarTicketPdf(ventaId).catch(err => alert("Error al generar PDF: " + err.message));
+    const contenidoModal = document.getElementById('ticketVenta'); // Obtenemos el contenido del modal
+    const ventanaImpresion = window.open('', '', 'width=800,height=600');
     
+    ventanaImpresion.document.write('<html><head><title>Imprimir Ticket</title></head><body>');
+    ventanaImpresion.document.write(contenidoModal.innerHTML); // Escribimos el contenido del modal en la nueva ventana
+    ventanaImpresion.document.write('</body></html>');
+
+    ventanaImpresion.document.close(); // Necesario para que el contenido cargue
+    ventanaImpresion.print(); // Ejecutamos la acción de impresión
   };
 
   if (!venta) return null;
@@ -153,12 +159,11 @@ export const DetalleVentaComponent = ({ show, handleClose, ventaId }) => {
         </div>
       </Modal.Body>
 
-      {/* ✅ El botón ahora llama al backend */}
       <Modal.Footer className="d-flex justify-content-between">
         <button
           className="btn text-white"
           style={{ backgroundColor: '#f28724' }}
-          onClick={imprimirTicket}
+          onClick={imprimirTicket} // Llamamos a la función para imprimir el modal
         >
           🧾 Imprimir ticket
         </button>
