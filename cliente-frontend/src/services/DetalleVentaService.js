@@ -25,7 +25,7 @@ export const generarTicketPdf = async (ventaId) => {
       `${REST_API_BASE_URL}/ticket/${ventaId}`,
       {
         responseType: "blob", 
-        headers: {} // ← SIN TOKEN
+        headers: authHeader(), // ← SIN TOKEN
       }
     );
 
