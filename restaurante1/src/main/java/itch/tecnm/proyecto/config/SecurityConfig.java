@@ -8,7 +8,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import itch.tecnm.proyecto.security.JwtAuthenticationFilter;
 import itch.tecnm.proyecto.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-	//MS RESTAURANTE1
+
     private final JwtUtil jwtUtil;
 
     @Bean
@@ -26,21 +27,16 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // ⭐ CORRECTO
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✔ ACTIVA CORS CORRECTAMENTE
 
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/api/cliente/**").permitAll()
 
-            		 // ⭐ REGISTRO DE CLIENTES — SIN TOKEN
-                    .requestMatchers(HttpMethod.POST, "/api/cliente/**")
-                        .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/cliente/**")
+                    .hasAnyAuthority("cliente", "cajero", "supervisor", "administrador", "mesero")
 
-                    // ⭐ GET CLIENTES — usado por reservas (listaClientes)
-                    .requestMatchers(HttpMethod.GET, "/api/cliente/**")
-                        .hasAnyAuthority("cliente", "cajero", "supervisor", "administrador","mesero")
-
-                    // ⭐ OPERACIONES ADMINISTRATIVAS (PUT, DELETE)
-                    .requestMatchers("/api/cliente/**")
-                        .hasAnyAuthority("cajero", "supervisor", "administrador")
+                .requestMatchers("/api/cliente/**")
+                    .hasAnyAuthority("cajero", "supervisor", "administrador")
 
                 .anyRequest().authenticated()
             );
@@ -50,21 +46,24 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ⭐ ESTE ES EL BEAN NECESARIO PARA QUE CORS FUNCIONE EN SECURITY
     @Bean
-    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
-        org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
-        config.setAllowedOrigins(java.util.List.of("https://frontend-production-5988.up.railway.app"));
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(
+            java.util.List.of(
+                "https://frontend-production-5988.up.railway.app"
+            )
+        );
+
         config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(java.util.List.of("*"));
         config.setExposedHeaders(java.util.List.of("Authorization"));
         config.setAllowCredentials(true);
 
-        org.springframework.web.cors.UrlBasedCorsConfigurationSource source =
-                new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); // ✔ MVC correct
         source.registerCorsConfiguration("/**", config);
 
         return source;
     }
 }
-
