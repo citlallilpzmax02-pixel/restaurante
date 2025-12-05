@@ -23,7 +23,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
     }
-
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -31,43 +31,33 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configure(http))
+            .cors(cors -> {})   // ✔ habilita el uso de CorsFilter
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
 
-            		// 🔓 LOGIN ES PÚBLICO
-            		.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                    .requestMatchers("/api/usuarios/by-username/**").permitAll()
+                    .requestMatchers(HttpMethod.DELETE, "/api/usuarios/{id}").permitAll()
 
-            		// 🔓 REGISTRO DE CLIENTE ES PÚBLICO
-            		.requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/usuarios/**")
+                        .hasAnyAuthority("administrador", "supervisor")
 
-            		// 🔓 VALIDAR USERNAME
-            		.requestMatchers("/api/usuarios/by-username/**").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/usuarios/**")
+                        .hasAnyAuthority("administrador", "supervisor")
 
-            		// 🔓 PERMITIR DELETE solo para cancelar registro de usuario NO logueado
-            		// (React solo lo usa cuando un cliente está creando su propia cuenta)
-            		.requestMatchers(HttpMethod.DELETE, "/api/usuarios/{id}").permitAll()
+                    .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**")
+                        .hasAnyAuthority("administrador", "supervisor")
 
-            		// 🔒 ADMIN y SUPERVISOR administran usuarios normalmente
-            		.requestMatchers(HttpMethod.GET, "/api/usuarios/**")
-            		    .hasAnyAuthority("administrador", "supervisor")
-
-            		.requestMatchers(HttpMethod.PUT, "/api/usuarios/**")
-            		    .hasAnyAuthority("administrador", "supervisor")
-
-            		// ⚠ IMPORTANTE: excluir el DELETE público para cancelación
-            		// y proteger todos los demás DELETEs
-            		.requestMatchers(HttpMethod.DELETE, "/api/usuarios/**")
-            		    .hasAnyAuthority("administrador", "supervisor")                
-       
-                .anyRequest().authenticated()
+                    .anyRequest().authenticated()
             );
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
 }
