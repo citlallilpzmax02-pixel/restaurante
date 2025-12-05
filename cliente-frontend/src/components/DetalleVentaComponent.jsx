@@ -3,7 +3,7 @@ import { getVenta } from '../services/VentaService';
 import { listaClientes } from '../services/ClienteService';
 import { listaEmpleados } from '../services/EmpleadoService';
 import { listaProductos } from '../services/ProductoService';
-import { getDetallesByVenta, generarTicketPdf } from '../services/DetalleVentaService'; // ✅ importamos generarTicketPdf
+import { getDetallesByVenta} from '../services/DetalleVentaService'; // ✅ importamos generarTicketPdf
 import { listaAtenciones } from '../services/AtenderService';
 import { getReserva } from '../services/ReservaService';
 import { listaMesas } from '../services/MesaService';
