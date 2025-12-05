@@ -18,7 +18,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(Arrays.asList(
-                "https://quebiririarestaurante.up.railway.app",  // frontend
+                "https://frontend-production-5988.up.railway.app",  // frontend
                 "http://localhost:3000" // para desarrollo local
         ));
 

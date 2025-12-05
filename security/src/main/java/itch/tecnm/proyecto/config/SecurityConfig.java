@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import itch.tecnm.proyecto.security.JwtAuthenticationFilter;
 import itch.tecnm.proyecto.security.JwtUtil;
+import itch.tecnm.proyecto.config.CorsFilter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 	//MS SECURITY
     private final JwtUtil jwtUtil;
+
+    private final CorsFilter corsFilter;
     
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -31,29 +34,28 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> {})   // ✔ habilita el uso de CorsFilter
+            .cors(cors -> {})  // habilita CORS
             .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-
-                    .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
-                    .requestMatchers("/api/usuarios/by-username/**").permitAll()
-                    .requestMatchers(HttpMethod.DELETE, "/api/usuarios/{id}").permitAll()
-
-                    .requestMatchers(HttpMethod.GET, "/api/usuarios/**")
-                        .hasAnyAuthority("administrador", "supervisor")
-
-                    .requestMatchers(HttpMethod.PUT, "/api/usuarios/**")
-                        .hasAnyAuthority("administrador", "supervisor")
-
-                    .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**")
-                        .hasAnyAuthority("administrador", "supervisor")
-
-                    .anyRequest().authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                .requestMatchers("/api/usuarios/by-username/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/usuarios/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/usuarios/**")
+                    .hasAnyAuthority("administrador", "supervisor")
+                .requestMatchers(HttpMethod.PUT, "/api/usuarios/**")
+                    .hasAnyAuthority("administrador", "supervisor")
+                .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**")
+                    .hasAnyAuthority("administrador", "supervisor")
+                .anyRequest().authenticated()
             );
 
+        // 👇 REGISTRAR CORS ANTES DEL JWT FILTER (muy importante)
+        http.addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // 👇 Luego registrar tu filtro JWT
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
