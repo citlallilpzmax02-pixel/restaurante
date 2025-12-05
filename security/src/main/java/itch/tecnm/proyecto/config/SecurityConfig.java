@@ -11,7 +11,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import itch.tecnm.proyecto.security.JwtAuthenticationFilter;
 import itch.tecnm.proyecto.security.JwtUtil;
-import itch.tecnm.proyecto.config.CorsFilter;
+import org.springframework.web.filter.CorsFilter;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
