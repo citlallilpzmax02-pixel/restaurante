@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const REST_API_BASE_URL = "http://localhost:7074/api/reserva";
+const REST_API_BASE_URL = "https://reservaciones-production-6aad.up.railway.app/api/reserva";
 
 // Agregar token JWT
 function authHeader() {
