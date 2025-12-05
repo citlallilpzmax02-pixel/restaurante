@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const REST_API_BASE_URL = "http://localhost:7073/api/producto";
+const REST_API_BASE_URL = "https://fonda-production-64ad.up.railway.app/api/producto";
 
 // Agregar token JWT
 function authHeader() {
