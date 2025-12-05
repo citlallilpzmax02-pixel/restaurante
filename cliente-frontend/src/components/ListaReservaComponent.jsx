@@ -177,7 +177,7 @@ export const ListaReservaComponent = () => {
         }
     }
 
-    // Buscar reservas por fecha
+    /* Buscar reservas por fecha
     function buscarPorFecha(e) {
         e.preventDefault();
         if (!fechaBusqueda) {
@@ -187,7 +187,27 @@ export const ListaReservaComponent = () => {
         buscarReservaPorFecha(fechaBusqueda)
             .then((res) => setReservas(res.data))
             .catch((err) => console.error('Error al buscar reservas:', err));
+    }*/
+    function buscarPorFecha(e) {
+        e.preventDefault();
+        if (!fechaBusqueda) {
+            getAllReservas();  // Si no hay fecha de búsqueda, se cargan todas las reservas
+            return;
+        }
+        buscarReservaPorFecha(fechaBusqueda)
+            .then((res) => {
+                let reservasFiltradas = res.data;
+
+                // Si el rol es "cliente", filtrar solo las reservas del cliente logueado
+                if (rol === "cliente") {
+                    reservasFiltradas = reservasFiltradas.filter(r => r.idCliente === idCliente);
+                }
+
+                setReservas(reservasFiltradas);  // Actualiza las reservas a mostrar
+            })
+            .catch((err) => console.error('Error al buscar reservas:', err));
     }
+
 
     function limpiarBusqueda() {
         setFechaBusqueda('');
