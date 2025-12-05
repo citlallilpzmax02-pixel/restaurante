@@ -30,6 +30,8 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✔ ACTIVA CORS CORRECTAMENTE
 
             .authorizeHttpRequests(auth -> auth
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                 .requestMatchers(HttpMethod.POST, "/api/cliente/**").permitAll()
 
                 .requestMatchers(HttpMethod.GET, "/api/cliente/**")
